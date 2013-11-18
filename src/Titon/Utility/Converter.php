@@ -108,12 +108,16 @@ class Converter {
      * Check to see if data passed is a JSON object.
      *
      * @param mixed $data
-     * @return mixed
+     * @return bool
      */
     public static function isJson($data) {
+        if (!is_string($data) || empty($data)) {
+            return false;
+        }
+
         $json = @json_decode($data, true);
 
-        return ($json !== null) ? $json : false;
+        return (json_last_error() === JSON_ERROR_NONE && $json !== null);
     }
 
     /**
@@ -130,24 +134,26 @@ class Converter {
      * Check to see if data passed has been serialized.
      *
      * @param mixed $data
-     * @return mixed
+     * @return bool
      */
     public static function isSerialized($data) {
-        $ser = @unserialize($data);
+        if (!is_string($data) || empty($data)) {
+            return false;
+        }
 
-        return ($ser !== false) ? $ser : false;
+        return (@unserialize($data) !== false);
     }
 
     /**
      * Check to see if data passed is an XML document.
      *
      * @param mixed $data
-     * @return \SimpleXmlElement
+     * @return bool
      */
     public static function isXml($data) {
         $xml = @simplexml_load_string($data);
 
-        return ($xml instanceof SimpleXmlElement) ? $xml : false;
+        return ($xml !== false && $xml !== null);
     }
 
     /**
@@ -164,14 +170,14 @@ class Converter {
         } else if (self::isObject($resource)) {
             return self::buildArray($resource);
 
-        } else if ($json = self::isJson($resource)) {
-            $resource = $json;
+        } else if (self::isJson($resource)) {
+            $resource = json_decode($resource, true);
 
-        } else if ($ser = self::isSerialized($resource)) {
-            $resource = $ser;
+        } else if (self::isSerialized($resource)) {
+            $resource = unserialize($resource);
 
-        } else if ($xml = self::isXml($resource)) {
-            $resource = self::xmlToArray($xml);
+        } else if (self::isXml($resource)) {
+            $resource = self::xmlToArray(simplexml_load_string($resource));
         }
 
         return (array) $resource;
@@ -186,16 +192,15 @@ class Converter {
     public static function toJson($resource) {
         if (self::isJson($resource)) {
             return $resource;
-        }
 
-        if (self::isObject($resource)) {
+        } else if (self::isObject($resource)) {
             $resource = self::buildArray($resource);
 
-        } else if ($xml = self::isXml($resource)) {
-            $resource = self::xmlToArray($xml);
+        } else if (self::isXml($resource)) {
+            $resource = self::xmlToArray(simplexml_load_string($resource));
 
-        } else if ($ser = self::isSerialized($resource)) {
-            $resource = $ser;
+        } else if (self::isSerialized($resource)) {
+            $resource = unserialize($resource);
         }
 
         return json_encode($resource);
@@ -217,14 +222,14 @@ class Converter {
         } else if (self::isArray($resource)) {
             // Continue
 
-        } else if ($json = self::isJson($resource)) {
-            $resource = $json;
+        } else if (self::isJson($resource)) {
+            $resource = json_decode($resource, true);
 
-        } else if ($ser = self::isSerialized($resource)) {
-            $resource = $ser;
+        } else if (self::isSerialized($resource)) {
+            $resource = unserialize($resource);
 
-        } else if ($xml = self::isXml($resource)) {
-            $resource = self::xmlToArray($xml);
+        } else if (self::isXml($resource)) {
+            $resource = self::xmlToArray(simplexml_load_string($resource));
         }
 
         return self::buildObject($resource);
@@ -248,10 +253,6 @@ class Converter {
      * @return string
      */
     public static function toXml($resource, $root = 'root') {
-        if (self::isXml($resource)) {
-            return $resource;
-        }
-
         if ($array = self::toArray($resource, true)) {
             $xml = simplexml_load_string('<?xml version="1.0" encoding="utf-8"?><' . $root . '></' . $root . '>');
             $response = self::buildXml($xml, $array);
@@ -259,7 +260,7 @@ class Converter {
             return trim($response->asXML());
         }
 
-        return $resource;
+        return null;
     }
 
     /**
