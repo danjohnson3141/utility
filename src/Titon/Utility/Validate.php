@@ -53,7 +53,7 @@ class Validate {
      * @return bool
      */
     public static function alpha($input, $exceptions = array()) {
-        return self::custom($input, '/^[\p{L}\s' . self::escape($exceptions) . ']+$/imU');
+        return static::custom($input, '/^[\p{L}\s' . static::escape($exceptions) . ']+$/imU');
     }
 
     /**
@@ -64,7 +64,7 @@ class Validate {
      * @return bool
      */
     public static function alphaNumeric($input, $exceptions = array()) {
-        return self::custom($input, '/^[\p{L}\p{N}\p{Nd}\s' . self::escape($exceptions) . ']+$/imU');
+        return static::custom($input, '/^[\p{L}\p{N}\p{Nd}\s' . static::escape($exceptions) . ']+$/imU');
     }
 
     /**
@@ -167,19 +167,19 @@ class Validate {
         }
 
         $cards = array(
-            self::AMERICAN_EXPRESS  => '/^3[4|7]\\d{13}$/',
-            self::BANKCARD          => '/^56(10\\d\\d|022[1-5])\\d{10}$/',
-            self::DINERS_CLUB       => '/^(?:3(0[0-5]|[68]\\d)\\d{11})|(?:5[1-5]\\d{14})$/',
-            self::DISCOVER          => '/^(?:6011|650\\d)\\d{12}$/',
-            self::ENROUTE           => '/^2(?:014|149)\\d{11}$/',
-            self::JCB               => '/^(3\\d{4}|2100|1800)\\d{11}$/',
-            self::MAESTRO           => '/^(?:5020|6\\d{3})\\d{12}$/',
-            self::MASTERCARD        => '/^5[1-5]\\d{14}$/',
-            self::SOLO_DEBIT        => '/^(6334[5-9][0-9]|6767[0-9]{2})\\d{10}(\\d{2,3})?$/',
-            self::SWITCH_DEBIT      => '/^(?:49(03(0[2-9]|3[5-9])|11(0[1-2]|7[4-9]|8[1-2])|36[0-9]{2})\\d{10}(\\d{2,3})?)|(?:564182\\d{10}(\\d{2,3})?)|(6(3(33[0-4][0-9])|759[0-9]{2})\\d{10}(\\d{2,3})?)$/',
-            self::VISA              => '/^4\\d{12}(\\d{3})?$/',
-            self::VISA_ELECTRON     => '/^(?:417500|4917\\d{2}|4913\\d{2})\\d{10}$/',
-            self::VOYAGER           => '/^8699[0-9]{11}$/'
+            static::AMERICAN_EXPRESS  => '/^3[4|7]\\d{13}$/',
+            static::BANKCARD          => '/^56(10\\d\\d|022[1-5])\\d{10}$/',
+            static::DINERS_CLUB       => '/^(?:3(0[0-5]|[68]\\d)\\d{11})|(?:5[1-5]\\d{14})$/',
+            static::DISCOVER          => '/^(?:6011|650\\d)\\d{12}$/',
+            static::ENROUTE           => '/^2(?:014|149)\\d{11}$/',
+            static::JCB               => '/^(3\\d{4}|2100|1800)\\d{11}$/',
+            static::MAESTRO           => '/^(?:5020|6\\d{3})\\d{12}$/',
+            static::MASTERCARD        => '/^5[1-5]\\d{14}$/',
+            static::SOLO_DEBIT        => '/^(6334[5-9][0-9]|6767[0-9]{2})\\d{10}(\\d{2,3})?$/',
+            static::SWITCH_DEBIT      => '/^(?:49(03(0[2-9]|3[5-9])|11(0[1-2]|7[4-9]|8[1-2])|36[0-9]{2})\\d{10}(\\d{2,3})?)|(?:564182\\d{10}(\\d{2,3})?)|(6(3(33[0-4][0-9])|759[0-9]{2})\\d{10}(\\d{2,3})?)$/',
+            static::VISA              => '/^4\\d{12}(\\d{3})?$/',
+            static::VISA_ELECTRON     => '/^(?:417500|4917\\d{2}|4913\\d{2})\\d{10}$/',
+            static::VOYAGER           => '/^8699[0-9]{11}$/'
         );
 
         if ($types) {
@@ -198,7 +198,7 @@ class Validate {
 
         foreach ($validate as $pattern) {
             if (preg_match($pattern, $input)) {
-                return self::luhn($input);
+                return static::luhn($input);
             }
         }
 
@@ -213,7 +213,7 @@ class Validate {
      * @return bool
      */
     public static function currency($input, $format = '/^\$[0-9,]+(?:\.[0-9]{2})?$/') {
-        return self::custom($input, $format);
+        return static::custom($input, $format);
     }
 
     /**
@@ -261,7 +261,7 @@ class Validate {
             $regex = '/^[-+]?[0-9]*\.{1}[0-9]{' . $places . '}$/';
         }
 
-        return self::custom($input, $regex);
+        return static::custom($input, $regex);
     }
 
     /**
@@ -273,7 +273,7 @@ class Validate {
      * @return bool
      */
     public static function dimensions($input, $type, $size) {
-        if (self::file($input)) {
+        if (static::file($input)) {
             $path = $input['tmp_name'];
 
         } else if (file_exists($input)) {
@@ -398,7 +398,7 @@ class Validate {
      * @return bool
      */
     public static function height($input, $size = 0) {
-        return self::dimensions($input, 'height', $size);
+        return static::dimensions($input, 'height', $size);
     }
 
     /**
@@ -470,7 +470,7 @@ class Validate {
      * @return bool
      */
     public static function mimeType($input, $mimes) {
-        if (self::file($input)) {
+        if (static::file($input)) {
             $path = $input['tmp_name'];
 
         } else if (file_exists($input)) {
@@ -495,7 +495,7 @@ class Validate {
      * @return bool
      */
     public static function minFilesize($input, $min) {
-        if (self::file($input)) {
+        if (static::file($input)) {
             $size = $input['size'];
 
         } else if (file_exists($input)) {
@@ -516,7 +516,7 @@ class Validate {
      * @return bool
      */
     public static function minHeight($input, $min) {
-        return self::dimensions($input, 'minHeight', $min);
+        return static::dimensions($input, 'minHeight', $min);
     }
 
     /**
@@ -538,7 +538,7 @@ class Validate {
      * @return bool
      */
     public static function minWidth($input, $min) {
-        return self::dimensions($input, 'minWidth', $min);
+        return static::dimensions($input, 'minWidth', $min);
     }
 
     /**
@@ -551,7 +551,7 @@ class Validate {
      * @return bool
      */
     public static function maxFilesize($input, $max) {
-        if (self::file($input)) {
+        if (static::file($input)) {
             $size = $input['size'];
 
         } else if (file_exists($input)) {
@@ -572,7 +572,7 @@ class Validate {
      * @return bool
      */
     public static function maxHeight($input, $max) {
-        return self::dimensions($input, 'maxHeight', $max);
+        return static::dimensions($input, 'maxHeight', $max);
     }
 
     /**
@@ -594,7 +594,7 @@ class Validate {
      * @return bool
      */
     public static function maxWidth($input, $max) {
-        return self::dimensions($input, 'maxWidth', $max);
+        return static::dimensions($input, 'maxWidth', $max);
     }
 
     /**
@@ -625,7 +625,7 @@ class Validate {
      * @return bool
      */
     public static function phone($input, $format = '/^(?:\+?1)?\s?(?:\([0-9]{3}\))?\s?[0-9]{3}-[0-9]{4}$/') {
-        return self::custom($input, $format);
+        return static::custom($input, $format);
     }
 
     /**
@@ -636,7 +636,7 @@ class Validate {
      * @return bool
      */
     public static function postalCode($input, $format = '/^[0-9]{5}(?:-[0-9]{4})?$/') {
-        return self::custom($input, $format);
+        return static::custom($input, $format);
     }
 
     /**
@@ -647,7 +647,7 @@ class Validate {
      * @return bool
      */
     public static function ssn($input, $format = '/^[0-9]{3}-[0-9]{2}-[0-9]{4}$/') {
-        return self::custom($input, $format);
+        return static::custom($input, $format);
     }
 
     /**
@@ -657,7 +657,7 @@ class Validate {
      * @return bool
      */
     public static function uuid($input) {
-        return self::custom($input, '/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i');
+        return static::custom($input, '/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i');
     }
 
     /**
@@ -678,7 +678,7 @@ class Validate {
      * @return bool
      */
     public static function width($input, $size) {
-        return self::dimensions($input, 'width', $size);
+        return static::dimensions($input, 'width', $size);
     }
 
 }

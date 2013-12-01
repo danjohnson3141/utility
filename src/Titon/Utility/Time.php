@@ -36,7 +36,7 @@ class Time {
      * @return int
      */
     public static function difference($time1, $time2) {
-        return self::toUnix($time1) - self::toUnix($time2);
+        return static::toUnix($time1) - static::toUnix($time2);
     }
 
     /**
@@ -47,7 +47,7 @@ class Time {
      * @return \DateTime
      */
     public static function factory($time = null, $timezone = null) {
-        return new DateTime($time, self::timezone($timezone));
+        return new DateTime($time, static::timezone($timezone));
     }
 
     /**
@@ -57,7 +57,7 @@ class Time {
      * @return bool
      */
     public static function isToday($time) {
-        return (date('Ymd', self::toUnix($time)) === date('Ymd'));
+        return (date('Ymd', static::toUnix($time)) === date('Ymd'));
     }
 
     /**
@@ -67,7 +67,7 @@ class Time {
      * @return bool
      */
     public static function isThisWeek($time) {
-        return (date('Wo', self::toUnix($time)) === date('Wo'));
+        return (date('Wo', static::toUnix($time)) === date('Wo'));
     }
 
     /**
@@ -77,7 +77,7 @@ class Time {
      * @return bool
      */
     public static function isThisMonth($time) {
-        return (date('mY', self::toUnix($time)) === date('mY'));
+        return (date('mY', static::toUnix($time)) === date('mY'));
     }
 
     /**
@@ -87,7 +87,7 @@ class Time {
      * @return bool
      */
     public static function isThisYear($time) {
-        return (date('Y', self::toUnix($time)) === date('Y'));
+        return (date('Y', static::toUnix($time)) === date('Y'));
     }
 
     /**
@@ -97,7 +97,7 @@ class Time {
      * @return bool
      */
     public static function isTomorrow($time) {
-        return (date('Ymd', self::toUnix($time)) === date('Ymd', strtotime('tomorrow')));
+        return (date('Ymd', static::toUnix($time)) === date('Ymd', strtotime('tomorrow')));
     }
 
     /**
@@ -109,8 +109,8 @@ class Time {
      * static
      */
     public static function isWithinNext($time, $span) {
-        $time = self::toUnix($time);
-        $span = self::toUnix($span);
+        $time = static::toUnix($time);
+        $span = static::toUnix($span);
 
         return ($time < $span && $time > time());
     }
@@ -155,7 +155,7 @@ class Time {
     public static function wasLastWeek($time) {
         $start = strtotime('last week 00:00:00');
         $end = strtotime('next week -1 second', $start);
-        $time = self::toUnix($time);
+        $time = static::toUnix($time);
 
         return ($time >= $start && $time <= $end);
     }
@@ -169,7 +169,7 @@ class Time {
     public static function wasLastMonth($time) {
         $start = strtotime('first day of last month 00:00:00');
         $end = strtotime('next month -1 second', $start);
-        $time = self::toUnix($time);
+        $time = static::toUnix($time);
 
         return ($time >= $start && $time <= $end);
     }
@@ -183,7 +183,7 @@ class Time {
     public static function wasLastYear($time) {
         $start = strtotime('last year January 1st 00:00:00');
         $end = strtotime('next year -1 second', $start);
-        $time = self::toUnix($time);
+        $time = static::toUnix($time);
 
         return ($time >= $start && $time <= $end);
     }
@@ -195,7 +195,7 @@ class Time {
      * @return bool
      */
     public static function wasYesterday($time) {
-        return (date('Ymd', self::toUnix($time)) === date('Ymd', strtotime('yesterday')));
+        return (date('Ymd', static::toUnix($time)) === date('Ymd', strtotime('yesterday')));
     }
 
     /**
@@ -206,8 +206,8 @@ class Time {
      * @return bool
      */
     public static function wasWithinLast($time, $span) {
-        $time = self::toUnix($time);
-        $span = self::toUnix($span);
+        $time = static::toUnix($time);
+        $span = static::toUnix($span);
 
         return ($time > $span && $time < time());
     }

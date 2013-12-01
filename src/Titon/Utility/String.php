@@ -78,7 +78,7 @@ class String {
      * @return bool
      */
     public static function contains($string, $needle, $strict = true, $offset = 0) {
-        return (self::indexOf($string, $needle, $strict, $offset) !== false);
+        return (static::indexOf($string, $needle, $strict, $offset) !== false);
     }
 
     /**
@@ -90,7 +90,7 @@ class String {
      * @return bool
      */
     public static function endsWith($string, $needle, $strict = true) {
-        $end = self::extract($string, -mb_strlen($needle));
+        $end = static::extract($string, -mb_strlen($needle));
 
         if ($strict) {
             return ($end === $needle);
@@ -238,14 +238,14 @@ class String {
             // prefix
             $pre = mb_substr($string, 0, $width);
 
-            if (mb_substr($pre, -1) !== ' ' && ($i = self::lastIndexOf($pre, ' '))) {
+            if (mb_substr($pre, -1) !== ' ' && ($i = static::lastIndexOf($pre, ' '))) {
                 $pre = mb_substr($pre, 0, $i);
             }
 
             // suffix
             $suf = mb_substr($string, -$width);
 
-            if (mb_substr($suf, 0, 1) !== ' ' && ($i = self::indexOf($suf, ' '))) {
+            if (mb_substr($suf, 0, 1) !== ' ' && ($i = static::indexOf($suf, ' '))) {
                 $suf = mb_substr($suf, $i);
             }
 
@@ -264,7 +264,7 @@ class String {
      * @return bool
      */
     public static function startsWith($string, $needle, $strict = true) {
-        $start = self::extract($string, 0, mb_strlen($needle));
+        $start = static::extract($string, 0, mb_strlen($needle));
 
         if ($strict) {
             return ($start === $needle);
@@ -388,7 +388,7 @@ class String {
             $lastChar = mb_substr($output, -1);
 
             if ($lastChar !== ' ' && $lastChar !== $close && $lastChar !== ';') {
-                $output = mb_substr($string, 0, self::lastIndexOf($output, ' '));
+                $output = mb_substr($string, 0, static::lastIndexOf($output, ' '));
             }
         }
 

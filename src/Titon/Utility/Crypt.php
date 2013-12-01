@@ -43,10 +43,10 @@ class Crypt {
      * @return string
      */
     public static function blowfish($string, $key, $operation = self::ENCRYPT) {
-        if ($operation === self::ENCRYPT) {
-            return self::encrypt($string, $key, self::BLOWFISH);
+        if ($operation === static::ENCRYPT) {
+            return static::encrypt($string, $key, static::BLOWFISH);
         } else {
-            return self::decrypt($string, $key, self::BLOWFISH);
+            return static::decrypt($string, $key, static::BLOWFISH);
         }
     }
 
@@ -61,7 +61,7 @@ class Crypt {
      * @return string
      */
     public static function decrypt($string, $key, $cipher, $mode = MCRYPT_MODE_CBC) {
-        list($key, $iv) = self::_prepare($key, $cipher, $mode);
+        list($key, $iv) = static::_prepare($key, $cipher, $mode);
 
         return rtrim(mcrypt_decrypt($cipher, $key, $string, $mode, $iv), "\0");
     }
@@ -75,10 +75,10 @@ class Crypt {
      * @return string
      */
     public static function des($string, $key, $operation = self::ENCRYPT) {
-        if ($operation === self::ENCRYPT) {
-            return self::encrypt($string, $key, self::DES);
+        if ($operation === static::ENCRYPT) {
+            return static::encrypt($string, $key, static::DES);
         } else {
-            return self::decrypt($string, $key, self::DES);
+            return static::decrypt($string, $key, static::DES);
         }
     }
 
@@ -93,7 +93,7 @@ class Crypt {
      * @return string
      */
     public static function encrypt($string, $key, $cipher, $mode = MCRYPT_MODE_CBC) {
-        list($key, $iv) = self::_prepare($key, $cipher, $mode);
+        list($key, $iv) = static::_prepare($key, $cipher, $mode);
 
         return mcrypt_encrypt($cipher, $key, $string, $mode, $iv);
     }
@@ -140,10 +140,10 @@ class Crypt {
      * @return string
      */
     public static function rijndael($string, $key, $operation = self::ENCRYPT) {
-        if ($operation === self::ENCRYPT) {
-            return self::encrypt($string, $key, self::RIJNDAEL);
+        if ($operation === static::ENCRYPT) {
+            return static::encrypt($string, $key, static::RIJNDAEL);
         } else {
-            return self::decrypt($string, $key, self::RIJNDAEL);
+            return static::decrypt($string, $key, static::RIJNDAEL);
         }
     }
 
@@ -156,10 +156,10 @@ class Crypt {
      * @return string
      */
     public static function tripledes($string, $key, $operation = self::ENCRYPT) {
-        if ($operation === self::ENCRYPT) {
-            return self::encrypt($string, $key, self::TRIPLEDES);
+        if ($operation === static::ENCRYPT) {
+            return static::encrypt($string, $key, static::TRIPLEDES);
         } else {
-            return self::decrypt($string, $key, self::TRIPLEDES);
+            return static::decrypt($string, $key, static::TRIPLEDES);
         }
     }
 
@@ -174,14 +174,14 @@ class Crypt {
      */
     protected static function _prepare($key, $cipher, $mode) {
         $keySize = mcrypt_get_key_size($cipher, $mode);
-        $key = str_pad(self::hash('md5', $key), $keySize, mb_substr($cipher, -1), STR_PAD_BOTH);
+        $key = str_pad(static::hash('md5', $key), $keySize, mb_substr($cipher, -1), STR_PAD_BOTH);
 
         if (mb_strlen($key) > $keySize) {
             $key = mb_substr($key, 0, $keySize);
         }
 
         $ivSize = mcrypt_get_iv_size($cipher, $mode);
-        $iv = str_pad(self::hash('md5', $key, $mode), $ivSize, mb_substr($cipher, 0, 1), STR_PAD_BOTH);
+        $iv = str_pad(static::hash('md5', $key, $mode), $ivSize, mb_substr($cipher, 0, 1), STR_PAD_BOTH);
 
         if (mb_strlen($iv) > $ivSize) {
             $iv = mb_substr($iv, 0, $ivSize);

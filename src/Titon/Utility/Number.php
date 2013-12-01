@@ -81,7 +81,7 @@ class Number {
             $size /= 1024;
         }
 
-        return self::precision($size, $precision) . $sizes[$total];
+        return static::precision($size, $precision) . $sizes[$total];
     }
 
     /**
@@ -130,7 +130,7 @@ class Number {
         );
 
         $options = $options + $defaults;
-        $amount = number_format(self::precision(abs($number), $options['places']), $options['places'], $options['decimals'], $options['thousands']);
+        $amount = number_format(static::precision(abs($number), $options['places']), $options['places'], $options['decimals'], $options['thousands']);
 
         // Cents
         if (($number < 1 && $number > -1) && $options['cents']) {
@@ -192,7 +192,7 @@ class Number {
      * @return bool
      */
     public static function isOdd($number) {
-        return !self::isEven($number);
+        return !static::isEven($number);
     }
 
     /**
@@ -215,7 +215,7 @@ class Number {
      * @return int
      */
     public static function limit($number, $min, $max) {
-        return self::max(self::min($number, $min), $max);
+        return static::max(static::min($number, $min), $max);
     }
 
     /**
@@ -282,7 +282,7 @@ class Number {
             'places' => 2
         );
 
-        return number_format(self::precision($number, $options['places']), $options['places'], $options['decimals'], $options['thousands']) . '%';
+        return number_format(static::precision($number, $options['places']), $options['places'], $options['decimals'], $options['thousands']) . '%';
     }
 
     /**
@@ -322,7 +322,7 @@ class Number {
      * @return int
      */
     public static function toBinary($number, $base = self::DECIMAL) {
-        return self::convert($number, $base, self::BINARY);
+        return static::convert($number, $base, static::BINARY);
     }
 
     /**
@@ -333,7 +333,7 @@ class Number {
      * @return int
      */
     public static function toDecimal($number, $base = self::DECIMAL) {
-        return self::convert($number, $base, self::DECIMAL);
+        return static::convert($number, $base, static::DECIMAL);
     }
 
     /**
@@ -344,7 +344,7 @@ class Number {
      * @return string
      */
     public static function toHex($number, $base = self::DECIMAL) {
-        return self::convert($number, $base, self::HEX);
+        return static::convert($number, $base, static::HEX);
     }
 
     /**
@@ -355,7 +355,7 @@ class Number {
      * @return string
      */
     public static function toOctal($number, $base = self::DECIMAL) {
-        return self::convert($number, $base, self::OCTAL);
+        return static::convert($number, $base, static::OCTAL);
     }
 
 }

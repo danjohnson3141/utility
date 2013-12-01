@@ -43,7 +43,7 @@ class Hash {
 
         foreach ($set as $value) {
             if (is_array($value)) {
-                $count = self::depth($value) + 1;
+                $count = static::depth($value) + 1;
 
                 if ($count > $depth) {
                     $depth = $count;
@@ -66,7 +66,7 @@ class Hash {
     public static function each(array $set, Closure $callback, $recursive = true) {
         foreach ($set as $key => $value) {
             if (is_array($value) && $recursive) {
-                $set[$key] = self::each($value, $callback, $recursive);
+                $set[$key] = static::each($value, $callback, $recursive);
             } else {
                 $set[$key] = $callback($value, $key);
             }
@@ -102,7 +102,7 @@ class Hash {
         $data = array();
 
         foreach ($set as $key => $value) {
-            $data = self::insert($data, $key, $value);
+            $data = static::insert($data, $key, $value);
         }
 
         return $data;
@@ -160,7 +160,7 @@ class Hash {
         if ($recursive) {
             foreach ($set as $key => $value) {
                 if (is_array($value)) {
-                    $set[$key] = self::filter($value, $recursive);
+                    $set[$key] = static::filter($value, $recursive);
                 }
             }
         }
@@ -191,7 +191,7 @@ class Hash {
         foreach ($set as $key => $value) {
             if (is_array($value)) {
                 if ($value) {
-                    $data += self::flatten($value, $path . $key);
+                    $data += static::flatten($value, $path . $key);
                 } else {
                     $data[$path . $key] = null;
                 }
@@ -220,7 +220,7 @@ class Hash {
 
             if (is_array($value)) {
                 if ($recursive) {
-                    $data[$key] = self::flip($value, $truncate);
+                    $data[$key] = static::flip($value, $truncate);
                 }
 
             } else if (is_int($key) && !$empty) {
@@ -248,7 +248,7 @@ class Hash {
             return $set;
         }
 
-        return self::extract($set, $path);
+        return static::extract($set, $path);
     }
 
     /**
@@ -298,11 +298,11 @@ class Hash {
      * @return array
      */
     public static function inject(array $set, $path, $value) {
-        if (self::has($set, $path)) {
+        if (static::has($set, $path)) {
             return $set;
         }
 
-        return self::insert($set, $path, $value);
+        return static::insert($set, $path, $value);
     }
 
     /**
@@ -353,7 +353,7 @@ class Hash {
      * @return bool
      */
     public static function isAlpha(array $set, $strict = true) {
-        return self::every($set, function($value) use ($strict) {
+        return static::every($set, function($value) use ($strict) {
             if (!is_string($value)) {
                 return false;
             }
@@ -375,7 +375,7 @@ class Hash {
      * @return bool
      */
     public static function isNumeric(array $set) {
-        return self::every($set, function($value) {
+        return static::every($set, function($value) {
             return is_numeric($value);
         });
     }
@@ -403,7 +403,7 @@ class Hash {
 
         if (!$return && $isArray) {
             foreach ($isArray as $key) {
-                if ($value = self::keyOf($set[$key], $match)) {
+                if ($value = static::keyOf($set[$key], $match)) {
                     $return = $key . '.' . $value;
                 }
             }
@@ -424,7 +424,7 @@ class Hash {
     public static function map(array $set, $function, $args = array()) {
         foreach ($set as $key => $value) {
             if (is_array($value)) {
-                $set[$key] = self::map($value, $function, $args);
+                $set[$key] = static::map($value, $function, $args);
 
             } else {
                 $temp = $args;
@@ -467,7 +467,7 @@ class Hash {
             foreach ((array) $set as $key => $value) {
                 if (isset($data[$key])) {
                     if (is_array($value) && is_array($data[$key])) {
-                        $data[$key] = self::merge($data[$key], $value);
+                        $data[$key] = static::merge($data[$key], $value);
 
                     } else {
                         $data[$key] = $value;
@@ -494,7 +494,7 @@ class Hash {
         if ($overwrite) {
             foreach ($overwrite as $key => $value) {
                 if (is_array($value)) {
-                    $set1[$key] = self::overwrite($set1[$key], $value);
+                    $set1[$key] = static::overwrite($set1[$key], $value);
                 } else {
                     $set1[$key] = $value;
                 }
@@ -515,7 +515,7 @@ class Hash {
         $data = array();
 
         foreach ($set as $array) {
-            if ($value = self::extract($array, $path)) {
+            if ($value = static::extract($array, $path)) {
                 $data[] = $value;
             }
         }
@@ -626,10 +626,10 @@ class Hash {
     public static function set(array $set, $path, $value = null) {
         if (is_array($path)) {
             foreach ($path as $key => $value) {
-                $set = self::insert($set, $key, $value);
+                $set = static::insert($set, $key, $value);
             }
         } else {
-            $set = self::insert($set, $path, $value);
+            $set = static::insert($set, $path, $value);
         }
 
         return $set;

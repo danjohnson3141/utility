@@ -44,7 +44,7 @@ class Path {
             return '[internal]';
         }
 
-        $file = self::ds($file);
+        $file = static::ds($file);
 
         // Define source locations
         foreach (array('src', 'lib') as $source) {
@@ -64,10 +64,10 @@ class Path {
         }
 
         foreach ($paths as $key => $path) {
-            $path = trim(self::ds($path), self::SEPARATOR) . self::SEPARATOR;
+            $path = trim(static::ds($path), static::SEPARATOR) . static::SEPARATOR;
 
             if (mb_strpos($file, $path) !== false) {
-                $file = trim(str_replace($path, '[' . $key . ']', $file), self::SEPARATOR);
+                $file = trim(str_replace($path, '[' . $key . ']', $file), static::SEPARATOR);
                 break;
             }
         }
@@ -94,10 +94,10 @@ class Path {
      * @return string
      */
     public static function ds($path, $endSlash = false) {
-        $path = str_replace(array('\\', '/'), self::SEPARATOR, $path);
+        $path = str_replace(array('\\', '/'), static::SEPARATOR, $path);
 
-        if ($endSlash && substr($path, -1) !== self::SEPARATOR) {
-            $path .= self::SEPARATOR;
+        if ($endSlash && substr($path, -1) !== static::SEPARATOR) {
+            $path .= static::SEPARATOR;
         }
 
         return $path;
@@ -128,7 +128,7 @@ class Path {
             $current[] = $paths;
         }
 
-        $path = implode(self::DELIMITER, $current);
+        $path = implode(static::DELIMITER, $current);
 
         set_include_path($path);
 
@@ -152,7 +152,7 @@ class Path {
      * @return bool
      */
     public static function isRelative($path) {
-        return !self::isAbsolute($path);
+        return !static::isAbsolute($path);
     }
 
     /**
@@ -167,7 +167,7 @@ class Path {
     public static function join(array $paths, $above = true, $join = true) {
         $clean = array();
         $parts = array();
-        $ds = self::SEPARATOR;
+        $ds = static::SEPARATOR;
         $up = 0;
 
         // First pass expands sub-paths
@@ -176,7 +176,7 @@ class Path {
                 throw new InvalidTypeException('Path parts must be strings');
             }
 
-            $path = trim(self::ds($path), $ds);
+            $path = trim(static::ds($path), $ds);
 
             if (strpos($path, $ds) !== false) {
                 $clean = array_merge($clean, explode($ds, $path));
@@ -249,13 +249,13 @@ class Path {
      * @throws \Titon\Utility\Exception\InvalidArgumentException
      */
     public static function relativeTo($from, $to) {
-        if (self::isRelative($from) || self::isRelative($to)) {
+        if (static::isRelative($from) || static::isRelative($to)) {
             throw new InvalidArgumentException('Cannot determine relative path without two absolute paths');
         }
 
-        $ds = self::SEPARATOR;
-        $from = explode($ds, self::ds($from, true));
-        $to = explode($ds, self::ds($to, true));
+        $ds = static::SEPARATOR;
+        $from = explode($ds, static::ds($from, true));
+        $to = explode($ds, static::ds($to, true));
         $relative = $to;
 
         foreach ($from as $depth => $dir) {
@@ -306,17 +306,17 @@ class Path {
      * @return string
      */
     public static function toNamespace($path) {
-        $path = self::ds(self::stripExt($path));
+        $path = static::ds(static::stripExt($path));
 
         // Attempt to split path at source folder
         foreach (array('lib', 'src') as $folder) {
-            if (mb_strpos($path, $folder . self::SEPARATOR) !== false) {
-                $paths = explode($folder . self::SEPARATOR, $path);
+            if (mb_strpos($path, $folder . static::SEPARATOR) !== false) {
+                $paths = explode($folder . static::SEPARATOR, $path);
                 $path = $paths[1];
             }
         }
 
-        return trim(str_replace('/', self::PACKAGE, $path), self::PACKAGE);
+        return trim(str_replace('/', static::PACKAGE, $path), static::PACKAGE);
     }
 
     /**
@@ -328,8 +328,8 @@ class Path {
      * @return string
      */
     public static function toPath($path, $ext = 'php', $root = '') {
-        $ds = self::SEPARATOR;
-        $path = self::ds($path);
+        $ds = static::SEPARATOR;
+        $path = static::ds($path);
         $dirs = explode($ds, $path);
         $file = array_pop($dirs);
         $path = implode($ds, $dirs) . $ds . str_replace('_', $ds, $file);

@@ -75,7 +75,7 @@ class Sanitize {
             $value = strip_tags($value, $options['whitelist']);
         }
 
-        return self::escape($value, $options);
+        return static::escape($value, $options);
     }
 
     /**
@@ -226,7 +226,7 @@ class Sanitize {
             } while ($old !== $value);
         }
 
-        return self::html($value, $options);
+        return static::html($value, $options);
     }
 
 }

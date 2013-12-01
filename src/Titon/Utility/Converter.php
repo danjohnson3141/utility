@@ -74,19 +74,19 @@ class Converter {
      * @return string
      */
     public static function is($data) {
-        if (self::isArray($data)) {
+        if (static::isArray($data)) {
             return 'array';
 
-        } else if (self::isObject($data)) {
+        } else if (static::isObject($data)) {
             return 'object';
 
-        } else if (self::isJson($data)) {
+        } else if (static::isJson($data)) {
             return 'json';
 
-        } else if (self::isSerialized($data)) {
+        } else if (static::isSerialized($data)) {
             return 'serialized';
 
-        } else if (self::isXml($data)) {
+        } else if (static::isXml($data)) {
             return 'xml';
         }
 
@@ -164,20 +164,20 @@ class Converter {
      * @return array
      */
     public static function toArray($resource, $recursive = false) {
-        if (self::isArray($resource)) {
-            return $recursive ? self::buildArray($resource) : $resource;
+        if (static::isArray($resource)) {
+            return $recursive ? static::buildArray($resource) : $resource;
 
-        } else if (self::isObject($resource)) {
-            return self::buildArray($resource);
+        } else if (static::isObject($resource)) {
+            return static::buildArray($resource);
 
-        } else if (self::isJson($resource)) {
+        } else if (static::isJson($resource)) {
             $resource = json_decode($resource, true);
 
-        } else if (self::isSerialized($resource)) {
+        } else if (static::isSerialized($resource)) {
             $resource = unserialize($resource);
 
-        } else if (self::isXml($resource)) {
-            $resource = self::xmlToArray(simplexml_load_string($resource));
+        } else if (static::isXml($resource)) {
+            $resource = static::xmlToArray(simplexml_load_string($resource));
         }
 
         return (array) $resource;
@@ -190,16 +190,16 @@ class Converter {
      * @return string
      */
     public static function toJson($resource) {
-        if (self::isJson($resource)) {
+        if (static::isJson($resource)) {
             return $resource;
 
-        } else if (self::isObject($resource)) {
-            $resource = self::buildArray($resource);
+        } else if (static::isObject($resource)) {
+            $resource = static::buildArray($resource);
 
-        } else if (self::isXml($resource)) {
-            $resource = self::xmlToArray(simplexml_load_string($resource));
+        } else if (static::isXml($resource)) {
+            $resource = static::xmlToArray(simplexml_load_string($resource));
 
-        } else if (self::isSerialized($resource)) {
+        } else if (static::isSerialized($resource)) {
             $resource = unserialize($resource);
         }
 
@@ -214,25 +214,25 @@ class Converter {
      * @return object
      */
     public static function toObject($resource, $recursive = false) {
-        if (self::isObject($resource)) {
+        if (static::isObject($resource)) {
             if (!$recursive) {
                 return $resource;
             }
 
-        } else if (self::isArray($resource)) {
+        } else if (static::isArray($resource)) {
             // Continue
 
-        } else if (self::isJson($resource)) {
+        } else if (static::isJson($resource)) {
             $resource = json_decode($resource, true);
 
-        } else if (self::isSerialized($resource)) {
+        } else if (static::isSerialized($resource)) {
             $resource = unserialize($resource);
 
-        } else if (self::isXml($resource)) {
-            $resource = self::xmlToArray(simplexml_load_string($resource));
+        } else if (static::isXml($resource)) {
+            $resource = static::xmlToArray(simplexml_load_string($resource));
         }
 
-        return self::buildObject($resource);
+        return static::buildObject($resource);
     }
 
     /**
@@ -242,7 +242,7 @@ class Converter {
      * @return string
      */
     public static function toSerialize($resource) {
-        return serialize(self::toArray($resource));
+        return serialize(static::toArray($resource));
     }
 
     /**
@@ -253,9 +253,9 @@ class Converter {
      * @return string
      */
     public static function toXml($resource, $root = 'root') {
-        if ($array = self::toArray($resource, true)) {
+        if ($array = static::toArray($resource, true)) {
             $xml = simplexml_load_string('<?xml version="1.0" encoding="utf-8"?><' . $root . '></' . $root . '>');
-            $response = self::buildXml($xml, $array);
+            $response = static::buildXml($xml, $array);
 
             return trim($response->asXML());
         }
@@ -274,9 +274,9 @@ class Converter {
 
         foreach ($object as $key => $value) {
             if (is_object($value) || is_array($value)) {
-                $array[$key] = self::buildArray($value);
+                $array[$key] = static::buildArray($value);
             } else {
-                $array[$key] = self::autobox($value);
+                $array[$key] = static::autobox($value);
             }
         }
 
@@ -294,9 +294,9 @@ class Converter {
 
         foreach ($array as $key => $value) {
             if (is_array($value) || is_object($value)) {
-                $obj->{$key} = self::buildObject($value);
+                $obj->{$key} = static::buildObject($value);
             } else {
-                $obj->{$key} = self::autobox($value);
+                $obj->{$key} = static::autobox($value);
             }
         }
 
@@ -316,7 +316,7 @@ class Converter {
 
                 // XML_NONE
                 if (!is_array($value)) {
-                    $xml->addChild($key, self::unbox($value));
+                    $xml->addChild($key, static::unbox($value));
                     continue;
                 }
 
@@ -324,9 +324,9 @@ class Converter {
                 if (Hash::isNumeric(array_keys($value))) {
                     foreach ($value as $kValue) {
                         if (is_array($kValue)) {
-                            self::buildXml($xml, array($key => $kValue));
+                            static::buildXml($xml, array($key => $kValue));
                         } else {
-                            $xml->addChild($key, self::unbox($kValue));
+                            $xml->addChild($key, static::unbox($kValue));
                         }
                     }
 
@@ -338,14 +338,14 @@ class Converter {
 
                     if (is_array($value['value'])) {
                         $node = $xml->addChild($key);
-                        self::buildXml($node, $value['value']);
+                        static::buildXml($node, $value['value']);
                     } else {
-                        $node = $xml->addChild($key, self::unbox($value['value']));
+                        $node = $xml->addChild($key, static::unbox($value['value']));
                     }
 
                     if (!empty($value['attributes'])) {
                         foreach ($value['attributes'] as $aKey => $aValue) {
-                            $node->addAttribute($aKey, self::unbox($aValue));
+                            $node->addAttribute($aKey, static::unbox($aValue));
                         }
                     }
 
@@ -357,9 +357,9 @@ class Converter {
                     if (!empty($value)) {
                         foreach ($value as $aKey => $aValue) {
                             if (is_array($aValue)) {
-                                self::buildXml($node, array($aKey => $aValue));
+                                static::buildXml($node, array($aKey => $aValue));
                             } else {
-                                $node->addAttribute($aKey, self::unbox($aValue));
+                                $node->addAttribute($aKey, static::unbox($aValue));
                             }
                         }
                     }
@@ -371,9 +371,9 @@ class Converter {
                     if (!empty($value)) {
                         foreach ($value as $aKey => $aValue) {
                             if (is_array($aValue)) {
-                                self::buildXml($node, array($aKey => $aValue));
+                                static::buildXml($node, array($aKey => $aValue));
                             } else {
-                                $node->addChild($aKey, self::unbox($aValue));
+                                $node->addChild($aKey, static::unbox($aValue));
                             }
                         }
                     }
@@ -397,7 +397,7 @@ class Converter {
         }
 
         if (count($xml->children()) <= 0) {
-            return self::autobox((string) $xml);
+            return static::autobox((string) $xml);
         }
 
         $array = array();
@@ -410,37 +410,37 @@ class Converter {
                 $array[$element] = '';
             }
 
-            if (!$node->attributes() || $format === self::XML_NONE) {
-                $data = self::xmlToArray($node, $format);
+            if (!$node->attributes() || $format === static::XML_NONE) {
+                $data = static::xmlToArray($node, $format);
 
             } else {
                 switch ($format) {
-                    case self::XML_GROUP:
+                    case static::XML_GROUP:
                         $data = array(
-                            'value' => self::autobox((string) $node),
+                            'value' => static::autobox((string) $node),
                             'attributes' => array()
                         );
 
                         if (count($node->children()) > 0) {
-                            $data['value'] = self::xmlToArray($node, $format);
+                            $data['value'] = static::xmlToArray($node, $format);
                         }
 
                         foreach ($node->attributes() as $attr => $value) {
-                            $data['attributes'][$attr] = self::autobox((string) $value);
+                            $data['attributes'][$attr] = static::autobox((string) $value);
                         }
                     break;
 
-                    case self::XML_MERGE:
+                    case static::XML_MERGE:
                         if (count($node->children()) > 0) {
-                            $data = $data + self::xmlToArray($node, $format);
+                            $data = $data + static::xmlToArray($node, $format);
                         } else {
-                            $data['value'] = self::autobox((string) $node);
+                            $data['value'] = static::autobox((string) $node);
                         }
                     /* fall-through */
 
-                    case self::XML_ATTRIBS:
+                    case static::XML_ATTRIBS:
                         foreach ($node->attributes() as $attr => $value) {
-                            $data[$attr] = self::autobox((string) $value);
+                            $data[$attr] = static::autobox((string) $value);
                         }
                     break;
                 }

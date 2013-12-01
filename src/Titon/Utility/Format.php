@@ -122,7 +122,7 @@ class Format {
             }
         }
 
-        return self::format($value, $format);
+        return static::format($value, $format);
     }
 
     /**
@@ -238,7 +238,7 @@ class Format {
      * @return string
      */
     public static function ssn($value, $format) {
-        return self::format($value, $format);
+        return static::format($value, $format);
     }
 
     /**
